@@ -30,13 +30,19 @@ def stored_users(variables):
 def existing_user(stored_users):
     return stored_users['default']
 
+# def login(request, base_url, selenium, existing_user):
+#     from pages.login_page import MozTrapLoginPage
+#     login_pg = MozTrapLoginPage(base_url, selenium)
+#     login_pg.go_to_login_page()
+#     login_pg.login(existing_user['email'], existing_user['password'])
 
 @pytest.fixture(scope='function')
-def login(request, base_url, selenium, existing_user):
-    from pages.login_page import MozTrapLoginPage
-    login_pg = MozTrapLoginPage(base_url, selenium)
-    login_pg.go_to_login_page()
-    login_pg.login(existing_user['email'], existing_user['password'])
+def login(request,base_url,selenium, existing_user):
+    selenium.find_element_by_id('login').click()
+    from bidpom import BIDPOM
+    bidpom = BIDPOM(selenium)
+    bidpom.sign_in(existing_user['email'], existing_user['password'])
+    assert selenium.find_element_by_id('logout').is_displayed()
 
 
 @pytest.fixture
